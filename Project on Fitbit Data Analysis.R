@@ -60,3 +60,28 @@ glimpse(merged)
 
 
 head(merged)
+
+
+
+# analyze phase -----------------------------------------------------------
+
+# lets get the unique number of observations from both dataset...................
+# we can use ID column to check whether users have worn fibit device during both activities....
+# we can see that users have not worn the device during sleep at multiple occasions..
+
+n_distinct(daily_activity$Id)
+n_distinct(sleep_day_new$Id)
+
+
+# In our sleep data we can see that there are two varaibles, which are total time in bed and total time asleep.
+
+# we can derive a new column called only_sleep by reducing the time asleep from total time in bed......
+
+merged$sleep_efficiency <- merged$TotalMinutesAsleep/merged$TotalTimeInBed
+
+# lets create two columns to differentiate heavy and light users....................
+
+merged$heavy_active <- merged$FairlyActiveMinutes + merged$VeryActiveMinutes
+merged$light_active <- merged$LightlyActiveMinutes + merged$SedentaryMinutes + merged$TotalMinutesAsleep
+merged$user_type <- case_when(merged$heavy_active > 60 ~ "heavy", TRUE ~ "light")
+
