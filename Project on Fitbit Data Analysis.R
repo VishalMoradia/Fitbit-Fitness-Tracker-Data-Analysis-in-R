@@ -85,3 +85,30 @@ merged$heavy_active <- merged$FairlyActiveMinutes + merged$VeryActiveMinutes
 merged$light_active <- merged$LightlyActiveMinutes + merged$SedentaryMinutes + merged$TotalMinutesAsleep
 merged$user_type <- case_when(merged$heavy_active > 60 ~ "heavy", TRUE ~ "light")
 
+# we can now begin our visualizations...................
+
+# we can clearly infer that heavy users are burning more calories than light users........
+
+ggplot(data = merged, aes(x = user_type, y = Calories)) +
+  geom_boxplot(alpha = 0.5) + labs(title = "Calories VS User Type")
+
+# relationship between total distance and calories burned...........
+# we can see the positive relationship between distance walked and calories burned....
+
+ggplot(data = merged, aes(x = TotalDistance, y = Calories)) + geom_jitter() +
+  geom_smooth()
+
+# lets categorise users on the basis of their steps count........
+# it is easy to see on average heavy users burn more calories than light users.......
+
+merged$step_type <- case_when(merged$TotalSteps > 6000 ~ "more than 6k", TRUE ~ "Less than 6K")
+
+ggplot(data = merged, aes(x = step_type, y = Calories)) + geom_boxplot() +
+  facet_wrap(~user_type)
+
+
+# lets check the relationship between sleep and type of users.......
+# we can easily see that heavy users tend to get lesser sleep than light users......
+
+ggplot(data = merged, aes(x = user_type, y = TotalMinutesAsleep)) +
+  geom_boxplot()
